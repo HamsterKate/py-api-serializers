@@ -2,7 +2,6 @@ from django.db.models import QuerySet
 from rest_framework import viewsets
 from rest_framework.serializers import Serializer
 
-from cinema.models import MovieSession
 from .models import (
     Genre,
     Actor,
