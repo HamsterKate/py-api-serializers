@@ -12,12 +12,19 @@ class CinemaHall(models.Model):
     def capacity(self) -> int:
         return self.rows * self.seats_in_row
 
+    class Meta:
+        verbose_name_plural = "cinema-halls"
+
     def __str__(self):
         return self.name
 
 
 class Genre(models.Model):
     name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        # ordering = ["name"]
+        verbose_name_plural = "genres"
 
     def __str__(self):
         return self.name
@@ -26,6 +33,14 @@ class Genre(models.Model):
 class Actor(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    class Meta:
+        ordering = ["first_name", "last_name"]
+        verbose_name_plural = "actors"
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -39,6 +54,7 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor)
 
     class Meta:
+        verbose_name_plural = "movies"
         ordering = ["title"]
 
     def __str__(self):
@@ -51,6 +67,7 @@ class MovieSession(models.Model):
     cinema_hall = models.ForeignKey(CinemaHall, on_delete=models.CASCADE)
 
     class Meta:
+        verbose_name_plural = "movie-sessions"
         ordering = ["-show_time"]
 
     def __str__(self):
@@ -63,11 +80,12 @@ class Order(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 
+    class Meta:
+        verbose_name_plural = "orders"
+        ordering = ["-created_at"]
+
     def __str__(self):
         return str(self.created_at)
-
-    class Meta:
-        ordering = ["-created_at"]
 
 
 class Ticket(models.Model):
@@ -105,3 +123,4 @@ class Ticket(models.Model):
 
     class Meta:
         unique_together = ("movie_session", "row", "seat")
+        verbose_name_plural = "tickets"
